@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kombat", "Kombat.vcxproj", "{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wombat", "Wombat.vcxproj", "{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -11,7 +11,7 @@ int main()
 {
 	::srand((unsigned)::time(nullptr));
 
-	sf::RenderWindow window(sf::VideoMode(600, 600, 32), "Kombat");
+	sf::RenderWindow window(sf::VideoMode(600, 600, 32), "Wombat");
 	window.setFramerateLimit(30);
 
 	Planet planet;

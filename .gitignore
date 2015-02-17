@@ -13,7 +13,7 @@
 # Build results
 temp/
 [Dd]ebug/
-#[Rr]elease/
+[Rr]elease/
 *_i.c
 *_p.c
 *.ilk

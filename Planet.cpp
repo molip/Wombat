@@ -189,7 +189,7 @@ void Planet::DrawPlanet() const
 {
 	glEnable(GL_TEXTURE_2D);
 	//glEnable(GL_CULL_FACE);
-	m_texture.bind();
+	sf::Texture::bind(&m_texture);
 
 	if (m_bWireframe)
 		glPolygonMode(GL_FRONT, GL_LINE);

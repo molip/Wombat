@@ -36,7 +36,7 @@ void Animation::Draw() const
 	int nFrame = int(m_tPlaying * m_fps) % m_nFrames;
 	//if (m_nFrames > 1)
 	//	std::cout << m_tPlaying << "," << m_fps << ", " << nFrame << std::endl;
-	m_texture.bind();
+	sf::Texture::bind(&m_texture);
 
 	auto sz = GetSize();
 	float w2 = float(sz.x) / 2;

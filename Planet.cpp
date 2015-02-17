@@ -150,6 +150,9 @@ void Planet::Update(float tDelta)
 
 void Planet::Draw(sf::RenderWindow& win) const
 {
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 //	glTranslatef(0, 0, -1);

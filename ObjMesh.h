@@ -23,13 +23,13 @@ public:
     float GetHorzRadius() const;
 
 private:
-	class Vertex		// 儲存基本 vertex 的 property
+	class Vertex
 	{
 	public:
-		int v;		// vertex (index of vList)
-		int n;		// normal (index of nList)
-		int t;		// texture (index of tList)
-		int m;		// material (index of material)
+		int v;
+		int n;
+		int t;
+		int m;
 		Vertex() {};
 		Vertex(int v_index, int n_index, int t_index=0, int m_index=0)
 		{
@@ -40,7 +40,7 @@ private:
 		}
 	};
 
-	class Vec3		// vList, nList, tList 的 structure
+	class Vec3
 	{
 	public:
 		GLfloat ptr[3];
@@ -59,10 +59,10 @@ private:
 		}
 	};
 
-	class FACE		// faceList 的 structure
+	class FACE
 	{
 	public:
-		Vertex v[3];		// 3 vertex for each face
+		Vertex v[3];
 		FACE (Vertex &v1, Vertex &v2, Vertex &v3)
 		{
 			v[0] = v1;
@@ -79,24 +79,16 @@ private:
 	// Loading Object
 	/////////////////////////////////////////////////////////////////////////////
 
+	string  s_file;
 
-	FILE	*scene, *texture;
-	string  s_file, t_file;
-	char	mat_file[50];		// matetial file name
+	map<string,int> matMap;		// material_name -> material_ID
+	vector<Material> matList;
 
-	int		matTotal;	// total material
-	map<string,int> matMap;		// matMap[material_name] = material_ID
-	Material	mat[100];	// material ID (每個 mesh 最多有 100 種 material)
+	vector<Vec3>	vList;
+	vector<Vec3>	nList;
+	vector<Vec3>	tList;
+	vector<FACE>	faceList;
 
-	vector<Vec3>	vList;		// Vertex List (Position) - world cord.
-	vector<Vec3>	nList;		// Normal List
-	vector<Vec3>	tList;		// Texture List
-	vector<FACE>	faceList;	// Face List
-
-	size_t vTotal, tTotal, nTotal, fTotal;
-
-	void	LoadMesh(string scene_file);
-	void	LoadTex(string tex_file);
-
-	void Init(const char* obj_file);
+	void LoadMesh(const string& scene_file);
+	void LoadTex(const string&tex_file);
 };

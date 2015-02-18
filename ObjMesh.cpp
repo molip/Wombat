@@ -4,34 +4,30 @@
 #include <cstring>
 #include <algorithm>
 
-const char* obj_database = "";	// 定義 mesh 的預設目錄
+const char* obj_database = "";	
 
 ObjMesh::ObjMesh(const char* obj_file)
 {
-	matTotal = 0;		// mat[0] reserved for default meterial
-	vTotal = tTotal = nTotal = fTotal = 0;
-
-	Init(obj_file);
+	LoadMesh(obj_file);
 }
 
 ObjMesh::ObjMesh()
 {
-	matTotal = 0;
-	vTotal = tTotal = nTotal = fTotal = 0;
 }
 
 ObjMesh::~ObjMesh()
 {
 }
 
-void ObjMesh::LoadMesh(string obj_file)
+void ObjMesh::LoadMesh(const string& obj_file)
 {
-	char	token[100], buf[100], v[5][100];	// v[5] 表示一個 polygon 可以有 5個 vertex
+	char	token[100], buf[100], v[5][100];	
 	float	vec[3];
 
 	int	n_vertex, n_texture, n_normal;
-	int	cur_tex = 0;				// state variable: 目前所使用的 material
+	int	cur_tex = 0;
 
+	FILE *scene = nullptr;
 	errno_t err = ::fopen_s(&scene, obj_file.c_str(), "r");
 	s_file = obj_file;
 
@@ -45,14 +41,13 @@ void ObjMesh::LoadMesh(string obj_file)
     size_t n = obj_file.find_last_of('/');
     if (n != std::string::npos)
         strPath = obj_file.substr(0, n + 1);
-    //cout << strPath << endl;
 
 	cout<<endl<<obj_file<<endl;
 
 	while(!feof(scene))
 	{
 		token[0] = 0;
-		fscanf_s(scene, "%s", token, sizeof(token));		// 讀 token
+		fscanf_s(scene, "%s", token, sizeof(token));
 
 		if (!strcmp(token,"g"))
 		{
@@ -61,6 +56,7 @@ void ObjMesh::LoadMesh(string obj_file)
 
 		else if (!strcmp(token,"mtllib"))
 		{
+			char mat_file[50];
 			fscanf_s(scene, "%s", mat_file, sizeof(mat_file));
 			LoadTex(strPath + string(mat_file));
 		}
@@ -90,12 +86,10 @@ void ObjMesh::LoadMesh(string obj_file)
 
 		else if (!strcmp(token,"f"))
 		{
-			for (int i=0;i<3;i++)		// face 預設為 3，假設一個 polygon 都只有 3 個 vertex
+			for (int i=0;i<3;i++)
 			{
 				fscanf_s(scene, "%s", v[i], sizeof(v[i]));
-				//printf("[%s]",v[i]);
 			}
-			//printf("\n");
 
 			Vertex	tmp_vertex[3];		// for faceList structure
 
@@ -123,7 +117,7 @@ void ObjMesh::LoadMesh(string obj_file)
 					offset++;
 				}
 				str[offset] = '\0';
-				n_texture = atoi(str);	// case: xxx//zzz，texture 設為 0 (tList 從 1 開始)
+				n_texture = atoi(str);
 				base += (ch == '\0')? offset : offset+1;
 				offset = 0;
 
@@ -134,39 +128,32 @@ void ObjMesh::LoadMesh(string obj_file)
 					offset++;
 				}
 				str[offset] = '\0';
-				n_normal = atoi(str);	// case: xxx/yyy，normal 設為 0 (nList 從 1 開始)
+				n_normal = atoi(str);
 
-				tmp_vertex[i].v = n_vertex;
-				tmp_vertex[i].t = n_texture;
-				tmp_vertex[i].n = n_normal;
+				// obj indices are 1-based.
+				tmp_vertex[i].v = n_vertex - 1;
+				tmp_vertex[i].t = n_texture - 1;
+				tmp_vertex[i].n = n_normal - 1;
 				tmp_vertex[i].m = cur_tex;
 			}
 
 			faceList.push_back(FACE(tmp_vertex[0],tmp_vertex[1],tmp_vertex[2]));
 		}
 
-		else if (!strcmp(token,"#"))	  // 註解
+		else if (!strcmp(token,"#"))
 			fgets(buf,100,scene);
-
-//		printf("[%s]\n",token);
 	}
 
 	if (scene) fclose(scene);
-
-	vTotal = vList.size();
-	nTotal = nList.size();
-	tTotal = tList.size();
-	fTotal = faceList.size();
-	printf("vetex: %d, normal: %d, texture: %d, triangles: %d\n",vTotal, nTotal, tTotal, fTotal);
 }
 
-void ObjMesh::LoadTex(string tex_file)
+void ObjMesh::LoadTex(const string& tex_file)
 {
 	char	token[100], buf[100];
 	float	r,g,b;
 
+	FILE* texture = nullptr;
 	::fopen_s(&texture, tex_file.c_str(), "r");
-	t_file = tex_file;
 
 	if (!texture)
 	{
@@ -176,85 +163,65 @@ void ObjMesh::LoadTex(string tex_file)
 
 	cout<<tex_file<<endl;
 
-	int cur_mat;
-
 	while(!feof(texture))
 	{
 		token[0] = NULL;
-		fscanf_s(texture, "%s", token, sizeof(token));		// 讀 token
+		fscanf_s(texture, "%s", token, sizeof(token));
 
 		if (!strcmp(token,"newmtl"))
 		{
 			fscanf_s(texture, "%s", buf, sizeof(buf));
-			cur_mat = matTotal++;					// 從 mat[1] 開始，mat[0] 空下來給 default material 用
-			matMap[s_file+string("_")+string(buf)] = cur_mat; 	// matMap["material_name"] = material_id;
+			matMap[s_file + string("_") + string(buf)] = (int)matList.size();
+			matList.push_back(Material());
 		}
 
 		else if (!strcmp(token,"Ka"))
 		{
 			fscanf_s(texture, "%f %f %f", &r, &g, &b);
-			mat[cur_mat].ambient = Colour(r, g, b);
+			matList.back().ambient = Colour(r, g, b);
 		}
 
 		else if (!strcmp(token,"Kd"))
 		{
 			fscanf_s(texture, "%f %f %f", &r, &g, &b);
-			mat[cur_mat].diffuse = Colour(r, g, b);
+			matList.back().diffuse = Colour(r, g, b);
 		}
 
 		else if (!strcmp(token,"Ks"))
 		{
 			fscanf_s(texture, "%f %f %f", &r, &g, &b);
-			mat[cur_mat].specular = Colour(r, g, b);
+			matList.back().specular = Colour(r, g, b);
 		}
 
 		else if (!strcmp(token,"Ns"))
 		{
 			fscanf_s(texture, "%f", &r);
-			mat[cur_mat].shininess = (int)r;
+			matList.back().shininess = (int)r;
 		}
 
-		else if (!strcmp(token,"#"))	  // 註解
+		else if (!strcmp(token,"#"))
 			fgets(buf,100,texture);
-
-//		printf("[%s]\n",token);
 	}
 
-	printf("total material:%d\n",matMap.size());
-
-	if (texture) fclose(texture);
-}
-
-void ObjMesh::Init(const char* obj_file)
-{
-	float default_value[3] = {1,1,1};
-
-	vList.push_back(Vec3(default_value));	// 因為 *.obj 的 index 是從 1 開始
-	nList.push_back(Vec3(default_value));	// 所以要先 push 一個 default value 到 vList[0],nList[0],tList[0]
-	tList.push_back(Vec3(default_value));
-
-	// 定義 default meterial: mat[0]
-	matTotal++;
-
-	LoadMesh(string(obj_file));		// 讀入 .obj 檔 (可處理 Material)
+	if (texture) 
+		fclose(texture);
 }
 
 void ObjMesh::Draw()
 {
     glBegin(GL_TRIANGLES);
-	for (int i = 0; i < fTotal; ++i)
+	for (auto& face : faceList)
     {
        for (int j = 0; j < 3; ++j)
        {
-            const Vertex& vertex = faceList[i][j];
+			const Vertex& vertex = face[j];
             GLfloat* pV = vList[vertex.v].ptr;
             GLfloat* pN = nList[vertex.n].ptr;
 
-			mat[vertex.m].Apply();
+			matList[vertex.m].Apply();
 
             glNormal3fv(pN);
             glVertex3fv(pV);
-            //printf("%f, f, %f\n", pV[0], pV[1], pV[2]);
        }
     }
     glEnd();

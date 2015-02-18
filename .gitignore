@@ -18,7 +18,6 @@ temp/
 *_p.c
 *.ilk
 *.meta
-*.obj
 *.pch
 *.pdb
 *.pgc
@@ -53,3 +52,4 @@ Thumbs.db
 
 # Folder config file
 Desktop.ini
+*.wings#

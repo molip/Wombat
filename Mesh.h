@@ -20,5 +20,3 @@ class Mesh1 : public Mesh
 public:
 	virtual void Draw() const override;
 };
-
-void DrawPlayer();

@@ -49,6 +49,6 @@ private:
 	float m_rotation;
 	int m_rotationTarget;
 	Vec3 m_dirX, m_dirZ;
-	float m_vAngle, m_hAngle;
+	float m_vAngle, m_hAngle, m_zoom;
 };
 

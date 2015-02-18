@@ -2,6 +2,7 @@
 
 #include "Sprite.h"
 
+class ObjMesh;
 class Player : public Sprite
 {
 public:
@@ -18,5 +19,6 @@ private:
 	virtual void DrawMesh() const override;
 
 	State m_state;
+	std::unique_ptr<ObjMesh> m_mesh;
 };
 

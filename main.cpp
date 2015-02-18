@@ -17,7 +17,7 @@ int main()
 	Planet planet;
 	sf::Clock clock;
 
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 
 	int nFrames = 0;
 	float tPeriod = 0;

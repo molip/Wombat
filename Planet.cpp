@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "Texture.h"
 #include "Mesh.h"
+#include "Material.h"
 
 #include <SFML/OpenGL.hpp>
 
@@ -20,7 +21,7 @@ namespace
 Planet* Planet::s_pInstance;
 
 Planet::Planet() : m_pPlayer(new Player), m_meshType(MeshType::Polar), m_bWireframe(false), m_bHitTest(true), m_rotation(0), m_rotationTarget(0), 
-m_dirX(1, 0, 0), m_dirZ(0, 0, 1), m_vAngle(30), m_hAngle(0)
+m_dirX(1, 0, 0), m_dirZ(0, 0, 1), m_vAngle(30), m_hAngle(0), m_zoom(10)
 {
     s_pInstance = this;
 	
@@ -53,14 +54,14 @@ void Planet::Update(float tDelta)
 
 	int x = 0, z = 0;
 
-	x -= sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
-	x += sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
-    z -= sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
-    z += sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
+	x -= sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+	x += sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+    z -= sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+    z += sf::Keyboard::isKeyPressed(sf::Keyboard::S);
 
 	m_pPlayer->SetState(z > 0 ? Player::State::WalkUp : x || z ? Player::State::WalkDown : Player::State::Stand);
 
-	float moveDelta = tDelta * 100;
+	float moveDelta = tDelta * 20;
 
 	Point3f pos = m_pPlayer->GetPos();
 	pos += x * moveDelta * m_dirX;
@@ -74,14 +75,27 @@ void Planet::Update(float tDelta)
 		m_rotation -= std::min(rotationDelta, m_rotation - m_rotationTarget);
 
 	float vRotationDelta = tDelta * 25;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		m_vAngle += vRotationDelta;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		m_vAngle -= vRotationDelta;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		m_hAngle += vRotationDelta;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		m_hAngle -= vRotationDelta;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::PageDown))
+		m_zoom += vRotationDelta;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::PageUp))
+		m_zoom -= vRotationDelta;
+
+	if (x < 0)
+		m_pPlayer->SetRotation(90 - (float)m_rotationTarget);
+	else if (x > 0)
+		m_pPlayer->SetRotation(-90 - (float)m_rotationTarget);
+	else if (z < 0)
+		m_pPlayer->SetRotation(0 - (float)m_rotationTarget);
+	else if (z > 0)
+		m_pPlayer->SetRotation(180 - (float)m_rotationTarget);
 
 	for (auto& p : m_objs)
 	{
@@ -112,7 +126,6 @@ void Planet::Draw(sf::RenderWindow& win) const
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_CULL_FACE);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
@@ -124,7 +137,7 @@ void Planet::Draw(sf::RenderWindow& win) const
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glTranslatef(0, -5, -100);
+	glTranslatef(0, 0, -m_zoom);
 
 	glRotatef(m_vAngle, 1, 0, 0);
 	glRotatef(m_hAngle + m_rotation, 0, 1, 0);
@@ -134,8 +147,13 @@ void Planet::Draw(sf::RenderWindow& win) const
 	float light0[] = { -50, 40, 30, 0 };
 	glLightfv(GL_LIGHT0, GL_POSITION, light0);
 
+	if (m_bWireframe)
+		glPolygonMode(GL_FRONT, GL_LINE);
+
 	DrawPlanet();
 	DrawSprites();
+
+	glPolygonMode(GL_FRONT, GL_FILL);
 }
 
 void Planet::OnKeyPressed(sf::Keyboard::Key key)
@@ -144,11 +162,6 @@ void Planet::OnKeyPressed(sf::Keyboard::Key key)
 	auto RotateCW = [](Vec3& vec) { vec = Vec3(-vec.z, 0, vec.x); };
 
 	if (key == sf::Keyboard::Tab)
-	{
-		m_meshType = MeshType((int(m_meshType) + 1) % (int)MeshType::_count);
-		CreateMesh();
-	}
-	else if (key == sf::Keyboard::W)
 		m_bWireframe = !m_bWireframe;
 	else if (key == sf::Keyboard::H)
 		m_bHitTest = !m_bHitTest;
@@ -171,15 +184,15 @@ void Planet::DrawPlanet() const
 	glEnable(GL_TEXTURE_2D);
 	//glEnable(GL_CULL_FACE);
 	sf::Texture::bind(&m_texture);
-	
+
+	Material().Apply();
+
 	m_pMesh->Draw();
 }
 
 void Planet::DrawSprites() const
 {
-	glEnable(GL_TEXTURE_2D);
-	//glEnable(GL_CULL_FACE);
-	sf::Texture::bind(&m_texture);
+	glDisable(GL_TEXTURE_2D);
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();

@@ -4,6 +4,7 @@
 
 #include <SFML/OpenGL.hpp>
 #include <iostream>
+#include <memory>
 
 namespace
 {
@@ -56,9 +57,10 @@ namespace
 
 void Mesh1::Draw() const
 {
-	float n = 512;
-	float t = 8;
+	float n = 256;
+	float t = 64;
 	glBegin(GL_QUADS);
+	glNormal3f(0, 1, 0);
 	glTexCoord2f(0, 0);
 	glVertex3f(-n, 0, -n);
 	glTexCoord2f(t, 0);
@@ -69,12 +71,3 @@ void Mesh1::Draw() const
 	glVertex3f(n, 0, -n);
 	glEnd();
 }
-
-void DrawPlayer()
-{
-	glPushMatrix();
-	glTranslatef(0, 5, 0);
-	DrawCuboid(10, 10, 10);
-	glPopMatrix();
-}
-

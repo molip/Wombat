@@ -1,6 +1,8 @@
 #include "Sprite.h"
 
-#include <SFML/OpenGL.hpp>
+#include <SFML/Graphics.hpp>
+
+#include <map>
 
 namespace 
 {

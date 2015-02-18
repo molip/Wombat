@@ -1,14 +1,12 @@
 #include "Player.h"
 #include "Texture.h"
 #include "Vector.h"
-#include "Mesh.h"
-
-#include <SFML/OpenGL.hpp>
+#include "ObjMesh.h"
 
 Player::Player()
 {
 	SetState(State::Stand);
-	//SetPos(Point3(300, 300, 0));
+	m_mesh.reset(new ObjMesh("../res/player.obj"));
 }
 
 Player::~Player()
@@ -26,6 +24,6 @@ void Player::SetState(State s)
 
 void Player::DrawMesh() const
 {
-	::DrawPlayer();
+	m_mesh->Draw();
 }
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Animation.h"
 #include "Types.h"
 
 #include <memory>
@@ -20,10 +19,13 @@ public:
 	void SetPos(const Point3f& v) { m_pos = v; }
 	const Point3f& GetPos() const { return m_pos; }
 	
+	void SetRotation(float val) { m_rotation = val; }
+
 protected:
 	virtual void DrawMesh() const = 0;
 
 private:
 	Point3f m_pos;
+	float m_rotation;
 };
 

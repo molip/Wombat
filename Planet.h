@@ -11,7 +11,6 @@
 class Sprite;
 class Player;
 class Mesh;
-class Item;
 
 class Planet
 {
@@ -27,8 +26,6 @@ public:
 
 	static Planet* Instance() { return s_pInstance; }
 
-	int m_nSpriteRotateX;
-
 private:
 	void DrawPlanet() const;
 	void DrawSprites() const;
@@ -43,11 +40,15 @@ private:
 	enum class MeshType { Polar, _count };
 
 	std::vector<std::unique_ptr<Sprite>> m_objs;
-	std::vector<std::unique_ptr<Item>> m_items;
 	std::unique_ptr<Player> m_pPlayer;
 	std::unique_ptr<Mesh> m_pMesh;
 	MeshType m_meshType;
 
 	static Planet* s_pInstance;
+
+	float m_rotation;
+	int m_rotationTarget;
+	Vec3 m_dirX, m_dirZ;
+	float m_vAngle, m_hAngle;
 };
 

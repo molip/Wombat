@@ -15,9 +15,8 @@ public:
 	void SetState(State s);
 
 private:
+	virtual void DrawMesh() const override;
+
 	State m_state;
-	const sf::Texture& m_texStand;
-	const sf::Texture& m_texWalkUp;
-	const sf::Texture& m_texWalkDown;
 };
 

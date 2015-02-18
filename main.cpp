@@ -11,7 +11,7 @@ int main()
 {
 	::srand((unsigned)::time(nullptr));
 
-	sf::RenderWindow window(sf::VideoMode(600, 600, 32), "Wombat");
+	sf::RenderWindow window(sf::VideoMode(1024, 768, 32), "Wombat");
 	window.setFramerateLimit(30);
 
 	Planet planet;
@@ -55,7 +55,7 @@ int main()
 		glViewport(0, 0, sz.x, sz.y);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, sz.x, 0, sz.y, 1000, -1000);
+		gluPerspective(45, sz.x / (double)sz.y, 5, 1000);
 		
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();

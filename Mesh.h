@@ -21,3 +21,4 @@ public:
 	virtual void Draw() const override;
 };
 
+void DrawPlayer();

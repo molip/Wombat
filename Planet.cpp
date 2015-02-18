@@ -3,7 +3,6 @@
 #include "Sprite.h"
 #include "Texture.h"
 #include "Mesh.h"
-#include "Item.h"
 
 #include <SFML/OpenGL.hpp>
 
@@ -20,38 +19,15 @@ namespace
 
 Planet* Planet::s_pInstance;
 
-Planet::Planet() : m_pPlayer(new Player), m_meshType(MeshType::Polar), m_bWireframe(false), m_bHitTest(true),
-	m_nSpriteRotateX(-1)
+Planet::Planet() : m_pPlayer(new Player), m_meshType(MeshType::Polar), m_bWireframe(false), m_bHitTest(true), m_rotation(0), m_rotationTarget(0), 
+m_dirX(1, 0, 0), m_dirZ(0, 0, 1), m_vAngle(30), m_hAngle(0)
 {
     s_pInstance = this;
 	
-	if (!m_texture.loadFromFile("../res/craters.png"))
+	if (!m_texture.loadFromFile("../res/tiles.png"))
 		throw;
 	m_texture.setRepeated(true);
 	m_texture.setSmooth(true);
-
-	auto& tex = Texture::Get("../res/tree1.png");
-	for (int i = 0; i < 50; ++i)
-	{
-		float width = (float(rand() % 3) + 1) / 10;
-		m_objs.push_back(std::unique_ptr<Sprite>(new Sprite(width, 1)));
-		m_objs.back()->SetFootprintScale(Size2f(0.4f, 0.4f));
-		m_objs.back()->SetPos(GetRandomPos(600));
-		m_objs.back()->SetAnimation(tex);
-	}
-
-	//m_objs.push_back(std::unique_ptr<Sprite>(new Sprite(1, 1)));
-	//m_objs.back()->SetPos(Vec3(0, 1, 0).Normalised());
-	//m_objs.back()->SetAnimation("../res/cookery.png");
-
-	for (int i = 0; i < 100; ++i)
-	{
-		m_items.push_back(std::unique_ptr<Item>(new Item));
-		m_items.back()->SetPos(GetRandomPos(600));
-	}
-
-	//m_items.push_back(std::unique_ptr<Item>(new Item));
-	//m_items.back()->SetPos(Vec3(0, 1, 0));
 
 	CreateMesh();
 }
@@ -63,89 +39,70 @@ Planet::~Planet()
 
 bool Planet::HitTest(const Sprite& s1, const Sprite& s2, const Point3& p2) const
 {
-	Rect r1 = s1.GetFootprintRect();
-	Rect r2 = s2.GetFootprintRect(p2);
-	return r1.intersects(r2);
+	return false;
 } 
 
 bool Planet::HitTest(const Sprite& s1, const Sprite& s2) const
 {
-	return s1.GetFootprintRect().intersects(s2.GetFootprintRect());
+	return false;
 }
 
 void Planet::Update(float tDelta)
 {
 	m_pPlayer->Update(tDelta);
 
-	for (auto& p : m_items)
-		p->Update(tDelta);
-
-	int x = 0, y = 0;
+	int x = 0, z = 0;
 
 	x -= sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
 	x += sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
-    y += sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
-    y -= sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
+    z -= sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
+    z += sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
 
-	m_pPlayer->SetState(y > 0 ? Player::State::WalkUp : x || y ? Player::State::WalkDown : Player::State::Stand);
+	m_pPlayer->SetState(z > 0 ? Player::State::WalkUp : x || z ? Player::State::WalkDown : Player::State::Stand);
 
-	x *= 4;
-	y *= 4;
+	float moveDelta = tDelta * 100;
 
-	Point3 oldPos = m_pPlayer->GetPos();
-	Point3 newPos = oldPos + Point3(x, y, 0);
+	Point3f pos = m_pPlayer->GetPos();
+	pos += x * moveDelta * m_dirX;
+	pos += z * moveDelta * m_dirZ;
+	Point3f newPos = pos;
 	
+	float rotationDelta = tDelta * 200;
+	if (m_rotationTarget > m_rotation)
+		m_rotation += std::min(rotationDelta, m_rotationTarget - m_rotation);
+	else if (m_rotationTarget < m_rotation)
+		m_rotation -= std::min(rotationDelta, m_rotation - m_rotationTarget);
+
+	float vRotationDelta = tDelta * 25;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		m_vAngle += vRotationDelta;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		m_vAngle -= vRotationDelta;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		m_hAngle += vRotationDelta;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		m_hAngle -= vRotationDelta;
+
 	for (auto& p : m_objs)
 	{
-		Rect overlap;
-		Rect r1 = p->GetFootprintRect();
-		Rect r2 = m_pPlayer->GetFootprintRect(newPos);
+		//Rect overlap;
+		//Rect r1 = p->GetFootprintRect();
+		//Rect r2 = m_pPlayer->GetFootprintRect(newPos);
 
-		if (r1.intersects(r2, overlap))
-		{
-			if (x < 0)
-				newPos.x += overlap.width + 1; 
-			else if (x > 0)
-				newPos.x -= overlap.width + 1; 
-			
-			if (y < 0)
-				newPos.y += overlap.height + 1; 
-			else if (y > 0)
-				newPos.y -= overlap.height + 1; 
-		}
+		//if (r1.intersects(r2, overlap))
+		//{
+		//	if (x < 0)
+		//		newPos.x += overlap.width + 1; 
+		//	else if (x > 0)
+		//		newPos.x -= overlap.width + 1; 
+		//	
+		//	if (y < 0)
+		//		newPos.y += overlap.height + 1; 
+		//	else if (y > 0)
+		//		newPos.y -= overlap.height + 1; 
+		//}
 	}
 	m_pPlayer->SetPos(newPos);
-
-/*
-	auto doMove = [&] (const Point3& newPos) -> bool
-	{
-		if (m_bHitTest)
-			for (auto& p : m_objs)
-				if (HitTest(*p, *m_pPlayer, newPos))
-					return false;
-
-		return true;
-	};
-
-	Point3 posPlayer = m_pPlayer->GetPos();
-
-	x *= 8;
-	y *= 8;
-
-	if (x && doMove(posPlayer + Point3(x, 0, 0)))
-		posPlayer.x += x;
-
-	if (y && doMove(posPlayer + Point3(0, y, 0)))
-		posPlayer.y += y;
-
-	m_pPlayer->SetPos(posPlayer);
-*/
-
-	for (auto it = m_items.begin(); it != m_items.end(); )
-		if (HitTest(**it, *m_pPlayer))
-			it = m_items.erase(it);
-		else
-			++it;
 }
 
 void Planet::Draw(sf::RenderWindow& win) const
@@ -153,9 +110,29 @@ void Planet::Draw(sf::RenderWindow& win) const
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_CULL_FACE);
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_DEPTH_TEST);
+
+	float amb[] = { 0.2f, 0.2f, 0.2f, 0 };
+	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-//	glTranslatef(0, 0, -1);
+
+	glTranslatef(0, -5, -100);
+
+	glRotatef(m_vAngle, 1, 0, 0);
+	glRotatef(m_hAngle + m_rotation, 0, 1, 0);
+
+	glTranslatef(-m_pPlayer->GetPos().x, 0, -m_pPlayer->GetPos().z);
+
+	float light0[] = { -50, 40, 30, 0 };
+	glLightfv(GL_LIGHT0, GL_POSITION, light0);
 
 	DrawPlanet();
 	DrawSprites();
@@ -163,6 +140,9 @@ void Planet::Draw(sf::RenderWindow& win) const
 
 void Planet::OnKeyPressed(sf::Keyboard::Key key)
 {
+	auto RotateCCW = [](Vec3& vec) { vec = Vec3(vec.z, 0, -vec.x); };
+	auto RotateCW = [](Vec3& vec) { vec = Vec3(-vec.z, 0, vec.x); };
+
 	if (key == sf::Keyboard::Tab)
 	{
 		m_meshType = MeshType((int(m_meshType) + 1) % (int)MeshType::_count);
@@ -172,12 +152,10 @@ void Planet::OnKeyPressed(sf::Keyboard::Key key)
 		m_bWireframe = !m_bWireframe;
 	else if (key == sf::Keyboard::H)
 		m_bHitTest = !m_bHitTest;
-	else if (key == sf::Keyboard::R)
-	{
-		if (++m_nSpriteRotateX == 1)
-			m_nSpriteRotateX = -1;
-		std::cout << "Planet::m_nSpriteRotateX: " << m_nSpriteRotateX << std::endl;
-	}
+	else if (key == sf::Keyboard::E)
+		m_rotationTarget -= 90, RotateCCW(m_dirX), RotateCCW(m_dirZ);
+	else if (key == sf::Keyboard::Q)
+		m_rotationTarget += 90, RotateCW(m_dirX), RotateCW(m_dirZ);
 }
 
 void Planet::CreateMesh()
@@ -193,41 +171,23 @@ void Planet::DrawPlanet() const
 	glEnable(GL_TEXTURE_2D);
 	//glEnable(GL_CULL_FACE);
 	sf::Texture::bind(&m_texture);
-
-	if (m_bWireframe)
-		glPolygonMode(GL_FRONT, GL_LINE);
 	
 	m_pMesh->Draw();
-	
-	glPolygonMode(GL_FRONT, GL_FILL);
-
 }
 
 void Planet::DrawSprites() const
 {
+	glEnable(GL_TEXTURE_2D);
+	//glEnable(GL_CULL_FACE);
+	sf::Texture::bind(&m_texture);
+
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 				
-	struct Comp 
-	{
-		bool operator() (const Sprite* pL, const Sprite* pR) const { return *pL < *pR; };
-	};
-	std::multiset<const Sprite*, Comp> set;
-
-	set.insert(m_pPlayer.get());
-
 	for (auto& p : m_objs)
-	{
-		set.insert(p.get());
-	}
-
-	for (auto& p : m_items)
-	{
-		set.insert(p.get());
-	}
-
-	for (auto p : set)
 		p->Draw();
+
+	m_pPlayer->Draw();
 
 	glPopMatrix();
 }

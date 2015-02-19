@@ -39,18 +39,18 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>temp\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)$(Configuration)\temp\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>temp\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)$(Configuration)\temp\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\lib\SFML-2.0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\lib\SFML-2.0\include;..\lib</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_DYNAMIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -66,7 +66,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\lib\SFML-2.0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\lib\SFML-2.0\include;..\lib</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_DYNAMIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -78,28 +78,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="ObjMesh.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Colour.h" />
-    <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="ObjMesh.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Types.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Matrix.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Sprite.h" />
-    <ClInclude Include="Vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lib\Jig\Jig.vcxproj">
+      <Project>{6c7150c0-a88c-49ed-8b19-398e2764e4cb}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

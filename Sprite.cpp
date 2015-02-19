@@ -1,7 +1,4 @@
 #include "Sprite.h"
-#include "Texture.h"
-#include "Matrix.h"
-#include "Vector.h"
 #include "Planet.h"
 
 #include <SFML/OpenGL.hpp>

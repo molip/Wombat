@@ -1,14 +1,17 @@
 #include "Planet.h"
 #include "Player.h"
 #include "Sprite.h"
-#include "Texture.h"
 #include "Mesh.h"
-#include "Material.h"
+
+#include "Jig/Material.h"
+#include "Jig/Texture.h"
 
 #include <SFML/OpenGL.hpp>
 
 #include <iostream>
 #include <set>
+
+using namespace Jig;
 
 namespace 
 {

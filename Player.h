@@ -2,7 +2,11 @@
 
 #include "Sprite.h"
 
-class ObjMesh;
+namespace Jig
+{
+	class ObjMesh;
+}
+
 class Player : public Sprite
 {
 public:
@@ -19,7 +23,7 @@ private:
 	virtual void DrawMesh() const override;
 
 	State m_state;
-	std::unique_ptr<ObjMesh> m_mesh;
+	std::unique_ptr<Jig::ObjMesh> m_mesh;
 	float m_val;
 };
 

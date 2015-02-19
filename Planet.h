@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Matrix.h"
-#include "Vector.h"
-#include "Types.h"
+#include "Jig/Vector.h"
+#include "Jig/Types.h"
 
 #include "SFML/Graphics.hpp"
 
@@ -31,7 +30,7 @@ private:
 	void DrawSprites() const;
 	void CreateMesh();
 
-	bool HitTest(const Sprite& s1, const Sprite& s2, const Point3& p2) const;
+	bool HitTest(const Sprite& s1, const Sprite& s2, const Jig::Point3& p2) const;
 	bool HitTest(const Sprite& s1, const Sprite& s2) const;
 
 	sf::Texture m_texture;
@@ -48,7 +47,7 @@ private:
 
 	float m_rotation;
 	int m_rotationTarget;
-	Vec3 m_dirX, m_dirZ;
+	Jig::Vec3 m_dirX, m_dirZ;
 	float m_vAngle, m_hAngle, m_zoom;
 };
 

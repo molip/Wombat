@@ -1,12 +1,10 @@
 #include "Player.h"
-#include "Texture.h"
-#include "Vector.h"
-#include "ObjMesh.h"
+#include "Jig/ObjMesh.h"
 
 Player::Player() : m_val(0)
 {
 	SetState(State::Stand);
-	m_mesh.reset(new ObjMesh("../res/player.obj"));
+	m_mesh.reset(new Jig::ObjMesh("../res/player.obj"));
 }
 
 Player::~Player()
@@ -34,16 +32,16 @@ void Player::DrawMesh() const
 	m_mesh->DrawObject("Body");
 
 	glPushMatrix();
-	glTranslatef(0, 0.6, 0);
+	glTranslatef(0, 0.6f, 0);
 	glRotatef(angle, 1, 0, 0);
-	glTranslatef(0, -0.6, 0);
+	glTranslatef(0, -0.6f, 0);
 	m_mesh->DrawObject("Left_leg");
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(0, 0.6, 0);
+	glTranslatef(0, 0.6f, 0);
 	glRotatef(-angle, 1, 0, 0);
-	glTranslatef(0, -0.6, 0);
+	glTranslatef(0, -0.6f, 0);
 	m_mesh->DrawObject("Right_leg");
 	glPopMatrix();
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Types.h"
+#include "Jig/Types.h"
 
 #include <memory>
 
@@ -16,8 +16,8 @@ public:
 
 	void Draw() const;
 
-	void SetPos(const Point3f& v) { m_pos = v; }
-	const Point3f& GetPos() const { return m_pos; }
+	void SetPos(const Jig::Point3f& v) { m_pos = v; }
+	const Jig::Point3f& GetPos() const { return m_pos; }
 	
 	void SetRotation(float val) { m_rotation = val; }
 
@@ -25,7 +25,7 @@ protected:
 	virtual void DrawMesh() const = 0;
 
 private:
-	Point3f m_pos;
+	Jig::Point3f m_pos;
 	float m_rotation;
 };
 

@@ -8,7 +8,7 @@ Material::Material() : ambient(0.2f, 0.2f, 0.2f), diffuse(0.8f, 0.8f, 0.8f), spe
 {
 }
 
-void Material::Apply()
+void Material::Apply() const
 {
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);

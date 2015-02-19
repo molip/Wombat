@@ -5,16 +5,38 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wombat", "Wombat.vcxproj", "{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Jig", "..\lib\Jig\Jig\Jig.vcxproj", "{6C7150C0-A88C-49ED-8B19-398E2764E4CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
 		Debug|x64 = Debug|x64
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}.Debug|Win32.ActiveCfg = Debug|x64
 		{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}.Debug|x64.ActiveCfg = Debug|x64
 		{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}.Debug|x64.Build.0 = Debug|x64
+		{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}.Release|Mixed Platforms.ActiveCfg = Release|x64
+		{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}.Release|Mixed Platforms.Build.0 = Release|x64
+		{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}.Release|Win32.ActiveCfg = Release|x64
 		{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}.Release|x64.ActiveCfg = Release|x64
 		{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}.Release|x64.Build.0 = Release|x64
+		{6C7150C0-A88C-49ED-8B19-398E2764E4CB}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{6C7150C0-A88C-49ED-8B19-398E2764E4CB}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{6C7150C0-A88C-49ED-8B19-398E2764E4CB}.Debug|Win32.ActiveCfg = Debug|x64
+		{6C7150C0-A88C-49ED-8B19-398E2764E4CB}.Debug|x64.ActiveCfg = Debug|x64
+		{6C7150C0-A88C-49ED-8B19-398E2764E4CB}.Debug|x64.Build.0 = Debug|x64
+		{6C7150C0-A88C-49ED-8B19-398E2764E4CB}.Release|Mixed Platforms.ActiveCfg = Release|x64
+		{6C7150C0-A88C-49ED-8B19-398E2764E4CB}.Release|Mixed Platforms.Build.0 = Release|x64
+		{6C7150C0-A88C-49ED-8B19-398E2764E4CB}.Release|Win32.ActiveCfg = Release|x64
+		{6C7150C0-A88C-49ED-8B19-398E2764E4CB}.Release|x64.ActiveCfg = Release|x64
+		{6C7150C0-A88C-49ED-8B19-398E2764E4CB}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

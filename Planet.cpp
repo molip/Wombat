@@ -50,8 +50,6 @@ bool Planet::HitTest(const Sprite& s1, const Sprite& s2) const
 
 void Planet::Update(float tDelta)
 {
-	m_pPlayer->Update(tDelta);
-
 	int x = 0, z = 0;
 
 	x -= sf::Keyboard::isKeyPressed(sf::Keyboard::A);
@@ -59,7 +57,8 @@ void Planet::Update(float tDelta)
     z -= sf::Keyboard::isKeyPressed(sf::Keyboard::W);
     z += sf::Keyboard::isKeyPressed(sf::Keyboard::S);
 
-	m_pPlayer->SetState(z > 0 ? Player::State::WalkUp : x || z ? Player::State::WalkDown : Player::State::Stand);
+	m_pPlayer->SetState(z == 0 && x == 0 ? Player::State::Stand : Player::State::Walk);
+	m_pPlayer->Update(tDelta);
 
 	float moveDelta = tDelta * 20;
 

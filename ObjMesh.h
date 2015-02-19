@@ -18,8 +18,9 @@ public:
 	ObjMesh(const char* obj_file);
 	virtual ~ObjMesh();
 
-    void Draw();
-    void Scale(float s);
+	void Draw() const;
+	void DrawObject(const std::string& name) const;
+	void Scale(float s);
     float GetHorzRadius() const;
 
 private:
@@ -69,7 +70,7 @@ private:
 			v[1] = v2;
 			v[2] = v3;
 		}
-		Vertex& operator[](int index)
+		const Vertex& operator[](int index) const
 		{
 			return v[index];
 		}
@@ -81,14 +82,22 @@ private:
 
 	string  s_file;
 
-	map<string,int> matMap;		// material_name -> material_ID
+	map<string, size_t> matMap;		// material_name -> material_ID
 	vector<Material> matList;
 
 	vector<Vec3>	vList;
 	vector<Vec3>	nList;
 	vector<Vec3>	tList;
-	vector<FACE>	faceList;
 
+	struct Object
+	{
+		vector<FACE>	faceList;
+	};
+
+	std::vector<Object> objects;
+	std::map<std::string, size_t> objectMap;
+
+	void DrawObject(const Object& obj) const;
 	void LoadMesh(const string& scene_file);
 	void LoadTex(const string&tex_file);
 };

@@ -6,7 +6,7 @@ class ObjMesh;
 class Player : public Sprite
 {
 public:
-	enum class State { Stand, WalkUp, WalkDown };
+	enum class State { Stand, Walk };
 
 	Player();
 	~Player();
@@ -20,5 +20,6 @@ private:
 
 	State m_state;
 	std::unique_ptr<ObjMesh> m_mesh;
+	float m_val;
 };
 

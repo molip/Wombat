@@ -6,7 +6,7 @@ class Material
 {
 public:
 	Material();
-	void Apply();
+	void Apply() const;
 
 	Colour ambient, diffuse, specular, emission;
 	int shininess;

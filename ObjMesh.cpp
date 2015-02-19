@@ -25,7 +25,7 @@ void ObjMesh::LoadMesh(const string& obj_file)
 	float	vec[3];
 
 	int	n_vertex, n_texture, n_normal;
-	int	cur_tex = 0;
+	size_t cur_tex = 0;
 
 	FILE *scene = nullptr;
 	errno_t err = ::fopen_s(&scene, obj_file.c_str(), "r");
@@ -49,7 +49,13 @@ void ObjMesh::LoadMesh(const string& obj_file)
 		token[0] = 0;
 		fscanf_s(scene, "%s", token, sizeof(token));
 
-		if (!strcmp(token,"g"))
+		if (!strcmp(token, "o"))
+		{
+			fscanf_s(scene, "%s", buf, sizeof(buf));
+			objectMap[buf] = objects.size();
+			objects.emplace_back();
+		}
+		else if (!strcmp(token, "g"))
 		{
 			fscanf_s(scene, "%s", buf, sizeof(buf));
 		}
@@ -134,10 +140,10 @@ void ObjMesh::LoadMesh(const string& obj_file)
 				tmp_vertex[i].v = n_vertex - 1;
 				tmp_vertex[i].t = n_texture - 1;
 				tmp_vertex[i].n = n_normal - 1;
-				tmp_vertex[i].m = cur_tex;
+				tmp_vertex[i].m = (int)cur_tex;
 			}
 
-			faceList.push_back(FACE(tmp_vertex[0],tmp_vertex[1],tmp_vertex[2]));
+			objects.back().faceList.push_back(FACE(tmp_vertex[0], tmp_vertex[1], tmp_vertex[2]));
 		}
 
 		else if (!strcmp(token,"#"))
@@ -168,11 +174,11 @@ void ObjMesh::LoadTex(const string& tex_file)
 		token[0] = NULL;
 		fscanf_s(texture, "%s", token, sizeof(token));
 
-		if (!strcmp(token,"newmtl"))
+		if (!strcmp(token, "newmtl"))
 		{
 			fscanf_s(texture, "%s", buf, sizeof(buf));
-			matMap[s_file + string("_") + string(buf)] = (int)matList.size();
-			matList.push_back(Material());
+			matMap[s_file + string("_") + string(buf)] = matList.size();
+			matList.emplace_back();
 		}
 
 		else if (!strcmp(token,"Ka"))
@@ -207,42 +213,55 @@ void ObjMesh::LoadTex(const string& tex_file)
 		fclose(texture);
 }
 
-void ObjMesh::Draw()
+void ObjMesh::Draw() const
+{
+	for (auto& obj : objects)
+		DrawObject(obj);
+}
+
+void ObjMesh::DrawObject(const std::string& name) const
+{
+	auto it = objectMap.find(name);
+	if (it == objectMap.end())
+		throw;
+	
+	DrawObject(objects[it->second]);
+}
+
+void ObjMesh::DrawObject(const Object& obj) const
 {
     glBegin(GL_TRIANGLES);
-	for (auto& face : faceList)
-    {
-       for (int j = 0; j < 3; ++j)
-       {
+	for (auto& face : obj.faceList)
+		for (int j = 0; j < 3; ++j)
+		{
 			const Vertex& vertex = face[j];
-            GLfloat* pV = vList[vertex.v].ptr;
-            GLfloat* pN = nList[vertex.n].ptr;
+			const GLfloat* pV = vList[vertex.v].ptr;
+			const GLfloat* pN = nList[vertex.n].ptr;
 
 			matList[vertex.m].Apply();
 
-            glNormal3fv(pN);
-            glVertex3fv(pV);
-       }
-    }
-    glEnd();
+			glNormal3fv(pN);
+			glVertex3fv(pV);
+		   }
+	glEnd();
 }
 
 void ObjMesh::Scale(float s)
 {
 	for (size_t i = 0; i < vList.size(); ++i)
-        for (int j = 0; j < 3; ++j)
-            vList[i].ptr[j] *= s;
+		for (int j = 0; j < 3; ++j)
+			vList[i].ptr[j] *= s;
 }
 
 float ObjMesh::GetHorzRadius() const
 {
     float rMax = 0.0;
 	for (size_t i = 1; i < vList.size(); ++i) // skip first (default value)
-    {
-        float x = vList[i][0], z = vList[i][2];
-        float r = ::sqrt(x * x + z * z);
-        rMax = std::max(r, rMax);
-    }
+	{
+		float x = vList[i][0], z = vList[i][2];
+		float r = ::sqrt(x * x + z * z);
+		rMax = std::max(r, rMax);
+	}
     return rMax;
 }
 

@@ -1,10 +1,12 @@
 #include "Player.h"
 #include "Jig/ObjMesh.h"
+#include "Jig/MeshAnimation.h"
 
 Player::Player() : m_val(0)
 {
 	SetState(State::Stand);
 	m_mesh.reset(new Jig::ObjMesh("../res/player.obj"));
+	m_anim.reset(new Jig::MeshAnimation(*m_mesh));
 }
 
 Player::~Player()
@@ -27,22 +29,8 @@ void Player::SetState(State s)
 
 void Player::DrawMesh() const
 {
-	float angle = ::sin(m_val * 20) * 50;
-
-	m_mesh->DrawObject("Body");
-
-	glPushMatrix();
-	glTranslatef(0, 0.6f, 0);
-	glRotatef(angle, 1, 0, 0);
-	glTranslatef(0, -0.6f, 0);
-	m_mesh->DrawObject("Left_leg");
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(0, 0.6f, 0);
-	glRotatef(-angle, 1, 0, 0);
-	glTranslatef(0, -0.6f, 0);
-	m_mesh->DrawObject("Right_leg");
-	glPopMatrix();
+	if (m_state == State::Walk)
+		m_anim->Draw(m_val * 2);
+	else
+		m_mesh->Draw();
 }
-

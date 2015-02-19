@@ -55,7 +55,7 @@ int main()
 		glViewport(0, 0, sz.x, sz.y);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(45, sz.x / (double)sz.y, 5, 1000);
+		gluPerspective(45, sz.x / (double)sz.y, 0.1, 1000);
 		
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();

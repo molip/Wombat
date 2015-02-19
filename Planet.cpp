@@ -139,6 +139,7 @@ void Planet::Draw(sf::RenderWindow& win) const
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+	glTranslatef(0, -0.8f, 0);
 	glTranslatef(0, 0, -m_zoom);
 
 	glRotatef(m_vAngle, 1, 0, 0);

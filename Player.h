@@ -16,7 +16,7 @@ public:
 	Player();
 	~Player();
 
-	virtual void Update(float tDelta) override;
+	virtual void Update(double tDelta) override;
 
 	void SetState(State s);
 
@@ -26,6 +26,6 @@ private:
 	State m_state;
 	std::unique_ptr<Jig::ObjMesh> m_mesh;
 	std::unique_ptr<Jig::MeshAnimation> m_anim;
-	float m_val;
+	double m_val;
 };
 

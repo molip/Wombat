@@ -20,7 +20,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	int nFrames = 0;
-	float tPeriod = 0;
+	double tPeriod = 0;
 
 	while (window.isOpen())
     {
@@ -36,7 +36,7 @@ int main()
 					planet.OnKeyPressed(event.key.code);
         }
 
-	    float tDelta = clock.restart().asSeconds();
+	    double tDelta = clock.restart().asSeconds();
 		tPeriod += tDelta;
 		++nFrames;
 		if (tPeriod >= 1)

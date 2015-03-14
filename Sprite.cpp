@@ -11,15 +11,15 @@ Sprite::~Sprite()
 {
 }
 
-void Sprite::Update(float tDelta)
+void Sprite::Update(double tDelta)
 {
 }
 
 void Sprite::Draw() const
 {
 	glPushMatrix();
-	glTranslatef(float(m_pos.x), float(m_pos.y), float(m_pos.z));
-	glRotatef(m_rotation, 0, 1, 0);
+	glTranslated(double(m_pos.x), double(m_pos.y), double(m_pos.z));
+	glRotated(m_rotation, 0, 1, 0);
 	DrawMesh();
 	glPopMatrix();
 }

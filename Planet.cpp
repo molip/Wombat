@@ -51,7 +51,7 @@ bool Planet::HitTest(const Sprite& s1, const Sprite& s2) const
 	return false;
 }
 
-void Planet::Update(float tDelta)
+void Planet::Update(double tDelta)
 {
 	int x = 0, z = 0;
 
@@ -63,20 +63,20 @@ void Planet::Update(float tDelta)
 	m_pPlayer->SetState(z == 0 && x == 0 ? Player::State::Stand : Player::State::Walk);
 	m_pPlayer->Update(tDelta);
 
-	float moveDelta = tDelta * 20;
+	double moveDelta = tDelta * 20;
 
-	Point3f pos = m_pPlayer->GetPos();
+	Vec3 pos = m_pPlayer->GetPos();
 	pos += x * moveDelta * m_dirX;
 	pos += z * moveDelta * m_dirZ;
-	Point3f newPos = pos;
+	Vec3 newPos = pos;
 	
-	float rotationDelta = tDelta * 200;
+	double rotationDelta = tDelta * 200;
 	if (m_rotationTarget > m_rotation)
 		m_rotation += std::min(rotationDelta, m_rotationTarget - m_rotation);
 	else if (m_rotationTarget < m_rotation)
 		m_rotation -= std::min(rotationDelta, m_rotation - m_rotationTarget);
 
-	float vRotationDelta = tDelta * 25;
+	double vRotationDelta = tDelta * 25;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		m_vAngle += vRotationDelta;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
@@ -91,13 +91,13 @@ void Planet::Update(float tDelta)
 		m_zoom -= vRotationDelta;
 
 	if (x < 0)
-		m_pPlayer->SetRotation(90 - (float)m_rotationTarget);
+		m_pPlayer->SetRotation(90 - (double)m_rotationTarget);
 	else if (x > 0)
-		m_pPlayer->SetRotation(-90 - (float)m_rotationTarget);
+		m_pPlayer->SetRotation(-90 - (double)m_rotationTarget);
 	else if (z < 0)
-		m_pPlayer->SetRotation(0 - (float)m_rotationTarget);
+		m_pPlayer->SetRotation(0 - (double)m_rotationTarget);
 	else if (z > 0)
-		m_pPlayer->SetRotation(180 - (float)m_rotationTarget);
+		m_pPlayer->SetRotation(180 - (double)m_rotationTarget);
 
 	for (auto& p : m_objs)
 	{
@@ -139,13 +139,13 @@ void Planet::Draw(sf::RenderWindow& win) const
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glTranslatef(0, -0.8f, 0);
-	glTranslatef(0, 0, -m_zoom);
+	glTranslated(0, -0.8, 0);
+	glTranslated(0, 0, -m_zoom);
 
-	glRotatef(m_vAngle, 1, 0, 0);
-	glRotatef(m_hAngle + m_rotation, 0, 1, 0);
+	glRotated(m_vAngle, 1, 0, 0);
+	glRotated(m_hAngle + m_rotation, 0, 1, 0);
 
-	glTranslatef(-m_pPlayer->GetPos().x, 0, -m_pPlayer->GetPos().z);
+	glTranslated(-m_pPlayer->GetPos().x, 0, -m_pPlayer->GetPos().z);
 
 	float light0[] = { -50, 40, 30, 0 };
 	glLightfv(GL_LIGHT0, GL_POSITION, light0);

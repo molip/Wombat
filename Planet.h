@@ -17,7 +17,7 @@ public:
 	Planet();
 	~Planet();
 
-	void Update(float tDelta);
+	void Update(double tDelta);
 
 	void Draw(sf::RenderWindow& win) const;
 
@@ -45,9 +45,9 @@ private:
 
 	static Planet* s_pInstance;
 
-	float m_rotation;
+	double m_rotation;
 	int m_rotationTarget;
 	Jig::Vec3 m_dirX, m_dirZ;
-	float m_vAngle, m_hAngle, m_zoom;
+	double m_vAngle, m_hAngle, m_zoom;
 };
 

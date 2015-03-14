@@ -13,7 +13,7 @@ Player::~Player()
 {
 }
 
-void Player::Update(float tDelta)
+void Player::Update(double tDelta)
 {
 	__super::Update(tDelta);
 	if (m_state == State::Walk)

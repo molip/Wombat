@@ -12,20 +12,20 @@ public:
 	Sprite();
 	~Sprite();
 
-	virtual void Update(float tDelta);
+	virtual void Update(double tDelta);
 
 	void Draw() const;
 
-	void SetPos(const Jig::Point3f& v) { m_pos = v; }
-	const Jig::Point3f& GetPos() const { return m_pos; }
+	void SetPos(const Jig::Vec3& v) { m_pos = v; }
+	const Jig::Vec3& GetPos() const { return m_pos; }
 	
-	void SetRotation(float val) { m_rotation = val; }
+	void SetRotation(double val) { m_rotation = val; }
 
 protected:
 	virtual void DrawMesh() const = 0;
 
 private:
-	Jig::Point3f m_pos;
-	float m_rotation;
+	Jig::Vec3 m_pos;
+	double m_rotation;
 };
 

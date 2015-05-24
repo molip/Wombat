@@ -7,11 +7,14 @@
 #include <iostream>
 #include <set>
 
+#include <gl/glu.h>
+
 int main()
 {
 	::srand((unsigned)::time(nullptr));
 
-	sf::RenderWindow window(sf::VideoMode(1024, 768, 32), "Wombat");
+	sf::ContextSettings settings(32); // Depth bits.
+	sf::RenderWindow window(sf::VideoMode(1024, 768, 32), "Wombat", sf::Style::Default, settings);
 	window.setFramerateLimit(30);
 
 	Planet planet;

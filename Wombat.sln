@@ -5,9 +5,9 @@ VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wombat", "Wombat.vcxproj", "{1E7A6EE7-8D5B-4DEE-ABC3-89D6CDCAEF03}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Jig", "lib\Jig\Jig.vcxproj", "{6C7150C0-A88C-49ED-8B19-398E2764E4CB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Jig", "libraries\lib\Jig\Jig.vcxproj", "{6C7150C0-A88C-49ED-8B19-398E2764E4CB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SFML", "lib\SFML.vcxproj", "{EFAA95A4-B8DB-4DDC-BE7B-EE76FAA57513}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SFML", "libraries\lib\SFML.vcxproj", "{EFAA95A4-B8DB-4DDC-BE7B-EE76FAA57513}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
